@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - UAP Blood System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f8f9fa; }
+        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
+        .navbar h1 { display: inline-block; margin-right: 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
+        .navbar a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+        .profile-card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .profile-card h2 { color: #dc3545; margin-bottom: 2rem; border-bottom: 2px solid #f8f9fa; padding-bottom: 1rem; }
+        .profile-info { display: grid; gap: 1rem; }
+        .info-item { padding: 1rem; background: #f8f9fa; border-radius: 8px; display: grid; grid-template-columns: 200px 1fr; }
+        .info-label { font-weight: bold; color: #333; }
+        .info-value { color: #666; }
+        .blood-group {
+            background: #dc3545;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+        .status-available { color: #28a745; font-weight: bold; }
+        .status-not-available { color: #dc3545; font-weight: bold; }
+        .edit-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .edit-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🩸 UAP Blood Bank</h1>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'profile' %}">My Profile</a>
+            <a href="{% url 'donor_list' %}">Find Donors</a>
+            <a href="{% url 'request_blood' %}">Request Blood</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="profile-card">
+            <h2>👤 My Profile</h2>
+            <div class="profile-info">
+                <div class="info-item">
+                    <span class="info-label">Username:</span>
+                    <span class="info-value">{{ user.username }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ user.email|default:"Not set" }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Blood Group:</span>
+                    <span class="info-value">
+                        {% if profile and profile.blood_group %}
+                            <span class="blood-group">{{ profile.blood_group }}</span>
+                        {% else %}
+                            Not set
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">
+                        {% if profile and profile.phone %}
+                            {{ profile.phone }}
+                        {% else %}
+                            Not set
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Address:</span>
+                    <span class="info-value">
+                        {% if profile and profile.address %}
+                            {{ profile.address|linebreaks }}
+                        {% else %}
+                            Not set
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Date of Birth:</span>
+                    <span class="info-value">
+                        {% if profile and profile.date_of_birth %}
+                            {{ profile.date_of_birth }}
+                        {% else %}
+                            Not set
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Donor Status:</span>
+                    <span class="info-value">
+                        {% if profile and profile.is_donor %}
+                            <span class="status-available">✅ Registered Donor</span>
+                        {% else %}
+                            <span class="status-not-available">❌ Not a donor</span>
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Availability:</span>
+                    <span class="info-value">
+                        {% if profile and profile.is_available %}
+                            <span class="status-available">✅ Available to donate</span>
+                        {% else %}
+                            <span class="status-not-available">❌ Currently unavailable</span>
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Last Donation:</span>
+                    <span class="info-value">
+                        {% if profile and profile.last_donation_date %}
+                            {{ profile.last_donation_date }}
+                        {% else %}
+                            Never donated
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Member Since:</span>
+                    <span class="info-value">
+                        {% if profile %}
+                            {{ profile.created_at|date:"F j, Y" }}
+                        {% else %}
+                            Recently joined
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <a href="#" class="edit-btn">Edit Profile (Coming Soon)</a>
+        </div>
+    </div>
+</body>
+</html>

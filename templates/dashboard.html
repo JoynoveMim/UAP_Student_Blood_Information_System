@@ -1,0 +1,15 @@
+<!-- Replace the welcome-card div with this: -->
+<div class="welcome-card">
+    <h2>Welcome, {{ user.username }}! 👋</h2>
+    {% if profile and profile.blood_group %}
+        <p>You are registered as a <strong>{{ profile.blood_group }}</strong> blood donor. Thank you for being part of our life-saving community!</p>
+        <div style="margin-top: 1rem; padding: 1rem; background: #d4edda; border-radius: 8px;">
+            <strong>🩸 Ready to save lives!</strong> You appear in donor searches when available.
+        </div>
+    {% else %}
+        <p>You are part of our life-saving community. Complete your profile to become a donor!</p>
+        <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px;">
+            <strong>ℹ️ Profile Incomplete:</strong> Please complete your donor information.
+        </div>
+    {% endif %}
+</div>

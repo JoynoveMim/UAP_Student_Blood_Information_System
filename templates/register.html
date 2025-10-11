@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - UAP Blood System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .register-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .register-header h2 {
+            color: #dc3545;
+            margin-bottom: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+        .btn-register {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-register:hover {
+            background: #218838;
+        }
+        .register-links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .register-links a {
+            color: #dc3545;
+            text-decoration: none;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+        .help-text {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <h2>👤 Register as Donor</h2>
+            <p>Join our life-saving community</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="form-group">
+                <label for="id_username">Username:</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <div class="error-message">
+                    {{ form.username.errors }}
+                </div>
+                {% endif %}
+                <div class="help-text">{{ form.username.help_text }}</div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="error-message">
+                    {{ form.email.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Password Fields in Row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_password1">Password:</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                    <div class="error-message">
+                        {{ form.password1.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password2">Confirm Password:</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                    <div class="error-message">
+                        {{ form.password2.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Blood Group -->
+            <div class="form-group">
+                <label for="id_blood_group">Blood Group:</label>
+                {{ form.blood_group }}
+                {% if form.blood_group.errors %}
+                <div class="error-message">
+                    {{ form.blood_group.errors }}
+                </div>
+                {% endif %}
+                <div class="help-text">{{ form.blood_group.help_text }}</div>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+                <label for="id_phone">Phone Number:</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                <div class="error-message">
+                    {{ form.phone.errors }}
+                </div>
+                {% endif %}
+                <div class="help-text">{{ form.phone.help_text }}</div>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="form-group">
+                <label for="id_date_of_birth">Date of Birth:</label>
+                {{ form.date_of_birth }}
+                {% if form.date_of_birth.errors %}
+                <div class="error-message">
+                    {{ form.date_of_birth.errors }}
+                </div>
+                {% endif %}
+                <div class="help-text">{{ form.date_of_birth.help_text }}</div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label for="id_address">Address:</label>
+                {{ form.address }}
+                {% if form.address.errors %}
+                <div class="error-message">
+                    {{ form.address.errors }}
+                </div>
+                {% endif %}
+                <div class="help-text">{{ form.address.help_text }}</div>
+            </div>
+
+            <button type="submit" class="btn-register">Create Account</button>
+        </form>
+
+        <div class="register-links">
+            <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+        </div>
+
+        <div class="back-home">
+            <a href="{% url 'home' %}">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

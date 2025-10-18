@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Donors - UAP Blood System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f8f9fa; }
+        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
+        .navbar h1 { display: inline-block; margin-right: 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
+        .navbar a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+
+        .search-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .search-card h2 { color: #dc3545; margin-bottom: 1rem; }
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group { margin-bottom: 0; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #dc3545;
+        }
+
+        .btn {
+            background: #dc3545;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            height: fit-content;
+        }
+
+        .btn:hover { background: #c82333; }
+
+        .btn-clear {
+            background: #6c757d;
+            margin-left: 0.5rem;
+        }
+
+        .btn-clear:hover {
+            background: #545b62;
+        }
+
+        .radius-toggle {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: #e7f3ff;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .radius-toggle input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.2);
+        }
+
+        .radius-toggle label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+
+        .help-text {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .donors-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .donors-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .donors-count {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .donor-card {
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1.5rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .donor-card:hover {
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            border-color: #dc3545;
+        }
+
+        .blood-group {
+            background: #dc3545;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .distance-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .donor-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .donor-info p {
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .donor-contact {
+            text-align: right;
+        }
+        .contact-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .contact-btn:hover {
+            background: #218838;
+        }
+
+        .no-donors {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        .no-donors h3 {
+            margin-bottom: 1rem;
+            color: #dc3545;
+        }
+
+        .search-results-info {
+            background: #e7f3ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #007bff;
+        }
+
+        .search-type-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .donor-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .donor-contact {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>🩸 UAP Blood Bank</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'donor_list' %}">Find Donors</a>
+        <a href="{% url 'request_blood' %}">Request Blood</a>
+        <a href="{% url 'request_history' %}">My Requests</a>
+        <!-- NOTIFICATIONS LINK -->
+        <a href="{% url 'notifications' %}">
+            🔔 Notifications
+            {% if unread_count > 0 %}
+            <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+                {{ unread_count }}
+            </span>
+            {% endif %}
+        </a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="search-card">
+        <h2>🔍 Search Donors</h2>
+        <form method="get" class="search-form">
+            <div class="form-group">
+                <label for="blood_group">Blood Group:</label>
+                <select name="blood_group" id="blood_group">
+                    <option value="">All Blood Groups</option>
+                    {% for value, label in blood_groups %}
+                    <option value="{{ value }}" {% if selected_blood_group == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" 
+                       name="location" 
+                       id="location" 
+                       placeholder="Enter area or city..."
+                       value="{{ selected_location }}">
+                <div class="help-text">Enter your area to find nearby donors</div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn">Search Donors</button>
+                <a href="{% url 'donor_list' %}" class="btn btn-clear">Clear</a>
+            </div>
+
+            <!-- RADIUS SEARCH TOGGLE -->
+            <div class="radius-toggle">
+                <input type="checkbox" 
+                       name="use_radius" 
+                       id="use_radius" 
+                       value="true"
+                       {% if search_type == 'radius' %}checked{% endif %}>
+                <label for="use_radius">
+                    <strong>📍 Search within 1km radius</strong>
+                </label>
+                <div class="help-text">
+                    Check this to find donors within 1km of your location. Make sure to enter your location above.
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="donors-list">
+        <div class="donors-header">
+            <h3>Available Donors</h3>
+            <div class="donors-count">
+                {{ donors.count }} donor{{ donors.count|pluralize }} found
+                {% if search_type == 'radius' %}
+                <span class="search-type-badge">📍 1km Radius</span>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if selected_blood_group or selected_location %}
+        <div class="search-results-info">
+            <strong>Search Results:</strong>
+            {% if selected_blood_group %}Blood Group: <strong>{{ selected_blood_group }}</strong>{% endif %}
+            {% if selected_location %}{% if selected_blood_group %} • {% endif %}Location: <strong>{{ selected_location }}</strong>{% endif %}
+            {% if search_type == 'radius' %} • <strong>Within 1km radius</strong>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if donors %}
+            {% for donor in donors %}
+            <div class="donor-card">
+                <div class="blood-group">
+                    {{ donor.blood_group }}
+                </div>
+
+                <div class="donor-info">
+                    <h3>{{ donor.user.username }}</h3>
+                    <p>📍 {{ donor.address|truncatewords:10 }}</p>
+                    <p>📞 {{ donor.phone }}</p>
+                    {% if donor.last_donation_date %}
+                    <p>🩸 Last donated: {{ donor.last_donation_date }}</p>
+                    {% else %}
+                    <p>🩸 Never donated before</p>
+                    {% endif %}
+                    
+                    <!-- Display distance if available -->
+                    {% if donor.distance %}
+                    <p style="color: #28a745; font-weight: bold;">📍 {{ donor.distance }} km away</p>
+                    {% endif %}
+                </div>
+
+                <div class="donor-contact">
+                    <a href="#" class="contact-btn">Contact Donor</a>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                        Member since: {{ donor.created_at|date:"M Y" }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-donors">
+                <h3>😔 No Donors Found</h3>
+                <p>
+                    {% if selected_blood_group or selected_location %}
+                    No donors match your search criteria. Try adjusting your filters or search area.
+                    {% else %}
+                    There are no available donors at the moment. Please check back later.
+                    {% endif %}
+                </p>
+                {% if selected_blood_group or selected_location %}
+                <p style="margin-top: 1rem;">
+                    <a href="{% url 'donor_list' %}" class="btn" style="display: inline-block;">Show All Donors</a>
+                </p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Auto-submit form when radius checkbox is toggled (if location is provided)
+    document.getElementById('use_radius').addEventListener('change', function() {
+        const locationField = document.getElementById('location');
+        if (locationField.value.trim() !== '') {
+            this.form.submit();
+        }
+    });
+
+    // Show/hide radius help text based on location input
+    document.getElementById('location').addEventListener('input', function() {
+        const radiusToggle = document.querySelector('.radius-toggle');
+        const helpText = radiusToggle.querySelector('.help-text');
+        
+        if (this.value.trim() === '') {
+            helpText.innerHTML = '<strong>Enter your location above to enable radius search</strong>';
+        } else {
+            helpText.innerHTML = 'Check this to find donors within 1km of your location. Make sure to enter your location above.';
+        }
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const locationField = document.getElementById('location');
+        if (locationField.value.trim() === '') {
+            const helpText = document.querySelector('.radius-toggle .help-text');
+            helpText.innerHTML = '<strong>Enter your location above to enable radius search</strong>';
+        }
+    });
+</script>
+</body>
+</html>

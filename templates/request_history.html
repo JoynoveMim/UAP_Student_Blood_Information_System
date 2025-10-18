@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blood Requests - UAP Blood System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f8f9fa; }
+        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
+        .navbar h1 { display: inline-block; margin-right: 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
+        .navbar a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 2rem; }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .page-header h2 { color: #dc3545; }
+        
+        .btn { 
+            background: #dc3545; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover { background: #c82333; }
+        
+        .requests-list { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+        }
+        
+        .request-card { 
+            padding: 1.5rem; 
+            border: 1px solid #e9ecef; 
+            border-radius: 10px; 
+            margin-bottom: 1rem;
+        }
+        .request-card:hover {
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .blood-group { 
+            background: #dc3545; 
+            color: white; 
+            padding: 0.5rem 1rem; 
+            border-radius: 20px; 
+            font-weight: bold;
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-accepted { background: #d1ecf1; color: #0c5460; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        
+        .urgency-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .urgency-normal { background: #d4edda; color: #155724; }
+        .urgency-urgent { background: #fff3cd; color: #856404; }
+        .urgency-emergency { background: #f8d7da; color: #721c24; }
+        
+        .request-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .no-requests {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        .no-requests h3 {
+            margin-bottom: 1rem;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+    <h1>🩸 UAP Blood Bank</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'donor_list' %}">Find Donors</a>
+        <a href="{% url 'request_blood' %}">Request Blood</a>
+        <a href="{% url 'request_history' %}">My Requests</a>
+        <!-- ADD NOTIFICATIONS LINK HERE -->
+        <a href="{% url 'notifications' %}">
+    🔔 Notifications
+    {% if unread_count > 0 %}
+    <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+        {{ unread_count }}
+    </span>
+    {% endif %}
+</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</div>
+    
+    <div class="container">
+        <div class="page-header">
+            <h2>📋 My Blood Requests</h2>
+            <a href="{% url 'request_blood' %}" class="btn">➕ New Request</a>
+        </div>
+        
+        <div class="requests-list">
+            {% if user_requests %}
+                {% for request in user_requests %}
+                <div class="request-card">
+                    <div class="request-header">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span class="blood-group">{{ request.blood_group }}</span>
+                            <span class="urgency-badge urgency-{{ request.urgency }}">
+                                {{ request.get_urgency_display }}
+                            </span>
+                        </div>
+                        <span class="status-badge status-{{ request.status }}">
+                            {{ request.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="request-details">
+                        <div>
+                            <div class="detail-item">
+                                <span class="detail-label">Units Required:</span> {{ request.units_required }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Hospital:</span> {{ request.hospital_name }}
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Needed By:</span> {{ request.needed_by|date:"M d, Y H:i" }}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="detail-item">
+                                <span class="detail-label">Contact:</span> {{ request.contact_person }} ({{ request.contact_phone }})
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Created:</span> {{ request.created_at|date:"M d, Y H:i" }}
+                            </div>
+                            {% if request.accepted_by %}
+                            <div class="detail-item">
+                                <span class="detail-label">Accepted By:</span> {{ request.accepted_by.username }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if request.message %}
+                    <div class="detail-item">
+                        <span class="detail-label">Message:</span> {{ request.message }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-requests">
+                    <h3>No Blood Requests Yet</h3>
+                    <p>You haven't created any blood requests yet.</p>
+                    <a href="{% url 'request_blood' %}" class="btn" style="margin-top: 1rem;">Create Your First Request</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

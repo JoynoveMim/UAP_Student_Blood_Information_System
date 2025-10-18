@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Blood - UAP Blood System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f8f9fa; }
+        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
+        .navbar h1 { display: inline-block; margin-right: 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
+        .navbar a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+        
+        .request-card { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+        }
+        .request-card h2 { 
+            color: #dc3545; 
+            margin-bottom: 2rem; 
+            text-align: center;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 1rem;
+        }
+        
+        .form-group { 
+            margin-bottom: 1.5rem; 
+        }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: bold; 
+            color: #333; 
+        }
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #e9ecef; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+        }
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus { 
+            outline: none; 
+            border-color: #dc3545; 
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .urgency-badges {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .urgency-option {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .urgency-option:hover {
+            border-color: #dc3545;
+        }
+        .urgency-option.selected {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .btn { 
+            background: #dc3545; 
+            color: white; 
+            padding: 12px 30px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .btn-center { 
+            display: block; 
+            margin: 2rem auto 0; 
+            width: 200px;
+        }
+        .btn:hover { 
+            background: #c82333; 
+        }
+        
+        .help-text {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+    <h1>🩸 UAP Blood Bank</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'donor_list' %}">Find Donors</a>
+        <a href="{% url 'request_blood' %}">Request Blood</a>
+        <a href="{% url 'request_history' %}">My Requests</a>
+        <!-- ADD NOTIFICATIONS LINK HERE -->
+        <a href="{% url 'notifications' %}">
+    🔔 Notifications
+    {% if unread_count > 0 %}
+    <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+        {{ unread_count }}
+    </span>
+    {% endif %}
+</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</div>
+    
+    <div class="container">
+        <div class="request-card">
+            <h2>🩸 Create Blood Request</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="background: {% if message.tags == 'success' %}#d4edda{% else %}#f8d7da{% endif %}; 
+                                color: {% if message.tags == 'success' %}#155724{% else %}#721c24{% endif %}; 
+                                padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Blood Requirements -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_blood_group" class="required">Blood Group Needed:</label>
+                        {{ form.blood_group }}
+                        <div class="help-text">{{ form.blood_group.help_text }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_units_required" class="required">Units Required:</label>
+                        {{ form.units_required }}
+                        <div class="help-text">{{ form.units_required.help_text }}</div>
+                    </div>
+                </div>
+                
+                <!-- Urgency Level -->
+                <div class="form-group">
+                    <label class="required">Urgency Level:</label>
+                    <div class="urgency-badges" id="urgency-badges">
+                        <div class="urgency-option" data-value="normal">
+                            🟢 Normal
+                        </div>
+                        <div class="urgency-option" data-value="urgent">
+                            🟡 Urgent
+                        </div>
+                        <div class="urgency-option" data-value="emergency">
+                            🔴 Emergency
+                        </div>
+                    </div>
+                    {{ form.urgency }}
+                    <div class="help-text">Select how urgently you need the blood</div>
+                </div>
+                
+                <!-- Date and Time -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_needed_by_date" class="required">Needed By Date:</label>
+                        {{ form.needed_by_date }}
+                        <div class="help-text">{{ form.needed_by_date.help_text }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_needed_by_time" class="required">Needed By Time:</label>
+                        {{ form.needed_by_time }}
+                        <div class="help-text">{{ form.needed_by_time.help_text }}</div>
+                    </div>
+                </div>
+                
+                <!-- Hospital Information -->
+                <div class="form-group">
+                    <label for="id_hospital_name" class="required">Hospital Name:</label>
+                    {{ form.hospital_name }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_hospital_address" class="required">Hospital Address:</label>
+                    {{ form.hospital_address }}
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_contact_person" class="required">Contact Person:</label>
+                        {{ form.contact_person }}
+                        <div class="help-text">{{ form.contact_person.help_text }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_contact_phone" class="required">Contact Phone:</label>
+                        {{ form.contact_phone }}
+                    </div>
+                </div>
+                
+                <!-- Additional Message -->
+                <div class="form-group">
+                    <label for="id_message">Additional Message for Donors:</label>
+                    {{ form.message }}
+                    <div class="help-text">{{ form.message.help_text }}</div>
+                </div>
+                
+                <button type="submit" class="btn btn-center">Submit Blood Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Urgency level selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const urgencyOptions = document.querySelectorAll('.urgency-option');
+            const urgencyField = document.getElementById('id_urgency');
+            
+            urgencyOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    urgencyOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Update the hidden field value
+                    urgencyField.value = this.getAttribute('data-value');
+                });
+            });
+            
+            // Set initial selection based on current value
+            if (urgencyField.value) {
+                const initialOption = document.querySelector(`.urgency-option[data-value="${urgencyField.value}"]`);
+                if (initialOption) {
+                    initialOption.classList.add('selected');
+                }
+            } else {
+                // Default to normal
+                urgencyField.value = 'normal';
+                document.querySelector('.urgency-option[data-value="normal"]').classList.add('selected');
+            }
+        });
+    </script>
+</body>
+</html>

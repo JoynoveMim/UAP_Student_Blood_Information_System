@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - UAP Blood System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f8f9fa; }
+        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
+        .navbar h1 { display: inline-block; margin-right: 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
+        .navbar a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
+        
+        .edit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .edit-header h2 { color: #dc3545; }
+        
+        .btn { 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        .btn:hover { background: #0056b3; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+        .btn-danger { background: #6c757d; }
+        .btn-danger:hover { background: #545b62; }
+        
+        .edit-card { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+        }
+        
+        .form-group { 
+            margin-bottom: 1.5rem; 
+        }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: bold; 
+            color: #333; 
+        }
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #e9ecef; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+        }
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus { 
+            outline: none; 
+            border-color: #dc3545; 
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        .help-text {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f8f9fa;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        .messages {
+            margin-bottom: 2rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+    <h1>🩸 UAP Blood Bank</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'donor_list' %}">Find Donors</a>
+        <a href="{% url 'request_blood' %}">Request Blood</a>
+        <a href="{% url 'request_history' %}">My Requests</a>
+        <!-- ADD NOTIFICATIONS LINK HERE -->
+         <a href="{% url 'notifications' %}">
+    🔔 Notifications
+    {% if unread_count > 0 %}
+    <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+        {{ unread_count }}
+    </span>
+    {% endif %}
+</a>
+        <a href="{% url 'notifications' %}">
+            🔔 Notifications
+            {% if user.is_authenticated %}
+                {% with unread_count=user.notifications.filter.is_read=False.count %}
+                    {% if unread_count > 0 %}
+                        <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+                            {{ unread_count }}
+                        </span>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
+        </a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</div>
+    
+
+
+
+    
+    <div class="container">
+        <div class="edit-header">
+            <h2>✏️ Edit Profile</h2>
+            <a href="{% url 'profile' %}" class="btn btn-danger">← Back to Profile</a>
+        </div>
+        
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'success' %}success{% else %}error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="edit-card">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Personal Information -->
+                <h3 style="color: #dc3545; margin-bottom: 1rem; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
+                    👤 Personal Information
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_first_name" class="required">First Name:</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <div class="error-message">{{ form.first_name.errors }}</div>
+                        {% endif %}
+                        <div class="help-text">{{ form.first_name.help_text }}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_last_name" class="required">Last Name:</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <div class="error-message">{{ form.last_name.errors }}</div>
+                        {% endif %}
+                        <div class="help-text">{{ form.last_name.help_text }}</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_email" class="required">Email:</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors }}</div>
+                    {% endif %}
+                    <div class="help-text">{{ form.email.help_text }}</div>
+                </div>
+                
+                <!-- Donor Information -->
+                <h3 style="color: #dc3545; margin: 2rem 0 1rem 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
+                    🩸 Donor Information
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_blood_group" class="required">Blood Group:</label>
+                        {{ form.blood_group }}
+                        {% if form.blood_group.errors %}
+                        <div class="error-message">{{ form.blood_group.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_phone" class="required">Phone Number:</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                        <div class="error-message">{{ form.phone.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_address" class="required">Address:</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                    <div class="error-message">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_date_of_birth" class="required">Date of Birth:</label>
+                        {{ form.date_of_birth }}
+                        {% if form.date_of_birth.errors %}
+                        <div class="error-message">{{ form.date_of_birth.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_last_donation_date">Last Donation Date:</label>
+                        {{ form.last_donation_date }}
+                        {% if form.last_donation_date.errors %}
+                        <div class="error-message">{{ form.last_donation_date.errors }}</div>
+                        {% endif %}
+                        <div class="help-text">{{ form.last_donation_date.help_text }}</div>
+                    </div>
+                </div>
+                
+                <!-- Donor Status -->
+                <h3 style="color: #dc3545; margin: 2rem 0 1rem 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
+                    ⚙️ Donor Settings
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            {{ form.is_donor }}
+                            <label for="id_is_donor" style="font-weight: normal;">
+                                I am registered as a blood donor
+                            </label>
+                        </div>
+                        {% if form.is_donor.errors %}
+                        <div class="error-message">{{ form.is_donor.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            {{ form.is_available }}
+                            <label for="id_is_available" style="font-weight: normal;">
+                                I am currently available to donate
+                            </label>
+                        </div>
+                        {% if form.is_available.errors %}
+                        <div class="error-message">{{ form.is_available.errors }}</div>
+                        {% endif %}
+                        <div class="help-text">{{ form.is_available.help_text }}</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-success">💾 Save Changes</button>
+                    <a href="{% url 'profile' %}" class="btn btn-danger">❌ Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

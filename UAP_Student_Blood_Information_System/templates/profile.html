@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - UAP Blood System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f8f9fa; }
+        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
+        .navbar h1 { display: inline-block; margin-right: 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
+        .navbar a:hover { background: rgba(255,255,255,0.2); }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 2rem; }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .profile-header h2 { color: #dc3545; }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        .btn:hover { background: #0056b3; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #218838; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+
+        .profile-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .profile-info {
+            display: grid;
+            gap: 1rem;
+        }
+        .info-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            align-items: center;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .info-value {
+            color: #666;
+        }
+
+        .blood-group {
+            background: #dc3545;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .status-available {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-not-available {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .availability-toggle {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #e7f3ff;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f8f9fa;
+        }
+
+        .stats-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .messages {
+            margin-bottom: 2rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+
+<body>
+<div class="navbar">
+    <h1>🩸 UAP Blood Bank</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'donor_list' %}">Find Donors</a>
+        <a href="{% url 'request_blood' %}">Request Blood</a>
+        <a href="{% url 'request_history' %}">My Requests</a>
+        <!-- FIXED NOTIFICATIONS LINK -->
+        <a href="{% url 'notifications' %}">
+            🔔 Notifications
+            {% if unread_count > 0 %}
+            <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+                {{ unread_count }}
+            </span>
+            {% endif %}
+        </a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="profile-header">
+        <h2>👤 My Profile</h2>
+        <div>
+            <a href="{% url 'edit_profile' %}" class="btn">Edit Profile</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-success">Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'success' %}success{% else %}error{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="profile-card">
+        <div class="profile-info">
+            <div class="info-item">
+                <span class="info-label">Username:</span>
+                <span class="info-value">{{ user.username }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">First Name:</span>
+                <span class="info-value">{{ user.first_name|default:"Not set" }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Last Name:</span>
+                <span class="info-value">{{ user.last_name|default:"Not set" }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ user.email|default:"Not set" }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Blood Group:</span>
+                <span class="info-value">
+                    {% if profile.blood_group %}
+                    <span class="blood-group">{{ profile.blood_group }}</span>
+                    {% else %}
+                    Not set
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Phone:</span>
+                <span class="info-value">
+                    {% if profile.phone %}
+                    {{ profile.phone }}
+                    {% else %}
+                    Not set
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Address:</span>
+                <span class="info-value">
+                    {% if profile.address %}
+                    {{ profile.address|linebreaks }}
+                    {% else %}
+                    Not set
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Date of Birth:</span>
+                <span class="info-value">
+                    {% if profile.date_of_birth %}
+                    {{ profile.date_of_birth }}
+                    {% else %}
+                    Not set
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Donor Status:</span>
+                <span class="info-value">
+                    {% if profile.is_donor %}
+                    <span class="status-available">✅ Registered Donor</span>
+                    {% else %}
+                    <span class="status-not-available">❌ Not a donor</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Availability:</span>
+                <span class="info-value">
+                    {% if profile.is_available %}
+                    <span class="status-available">✅ Available to donate</span>
+                    {% else %}
+                    <span class="status-not-available">❌ Currently unavailable</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Last Donation:</span>
+                <span class="info-value">
+                    {% if profile.last_donation_date %}
+                    {{ profile.last_donation_date }}
+                    {% else %}
+                    Never donated
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Member Since:</span>
+                <span class="info-value">
+                    {% if profile.created_at %}
+                    {{ profile.created_at|date:"F j, Y" }}
+                    {% else %}
+                    Recently joined
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Availability Toggle -->
+        <div class="availability-toggle">
+            <div>
+                <h4>Quick Availability Toggle</h4>
+                <p>Turn this on/off to control whether you appear in donor searches</p>
+            </div>
+            <form method="post" action="{% url 'toggle_availability' %}" style="display: inline;">
+                {% csrf_token %}
+                <label class="toggle-switch">
+                    <input type="checkbox" {% if profile.is_available %}checked{% endif %} onchange="this.form.submit()">
+                    <span class="slider"></span>
+                </label>
+            </form>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'edit_profile' %}" class="btn">✏️ Edit Full Profile</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-success">📊 Go to Dashboard</a>
+            <a href="{% url 'donor_list' %}" class="btn">🔍 Find Donors</a>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-card">
+        <h3>📊 Your Donation Stats</h3>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">
+                    {% if profile.last_donation_date %}1{% else %}0{% endif %}
+                </div>
+                <div class="stat-label">Donations Made</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">
+                    {% if profile.is_available %}1{% else %}0{% endif %}
+                </div>
+                <div class="stat-label">Currently Available</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">
+                    {{ user.blood_requests.count }}
+                </div>
+                <div class="stat-label">Requests Made</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">
+                    {{ user.accepted_requests.count }}
+                </div>
+                <div class="stat-label">Requests Accepted</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

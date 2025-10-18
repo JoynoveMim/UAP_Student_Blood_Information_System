@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAP Blood Information System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh; }
+        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .navbar h1 { display: inline-block; margin-right: 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; transition: background 0.3s; }
+        .navbar a:hover { background: rgba(255,255,255,0.2); }
+        .hero { text-align: center; padding: 4rem 2rem; background: white; margin: 2rem auto; max-width: 1000px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .hero h2 { color: #dc3545; margin-bottom: 1rem; font-size: 2.5rem; }
+        .hero p { color: #666; font-size: 1.2rem; margin-bottom: 2rem; }
+        .btn { display: inline-block; padding: 12px 30px; margin: 10px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; transition: transform 0.3s, box-shadow 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-login { background: #dc3545; color: white; }
+        .btn-register { background: #28a745; color: white; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; padding: 2rem; max-width: 1000px; margin: 0 auto; }
+        .feature-card { background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 3px 15px rgba(0,0,0,0.1); }
+        .feature-card h3 { color: #dc3545; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🩸 UAP Blood Bank</h1>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'profile' %}">My Profile</a>
+                <a href="{% url 'donor_list' %}">Find Donors</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </div>
+
+    <div class="hero">
+        <h2>Save Lives, Donate Blood</h2>
+        <p>Connecting blood donors with recipients across UAP campus community</p>
+
+        {% if not user.is_authenticated %}
+        <div>
+            <a href="{% url 'login' %}" class="btn btn-login">Login to System</a>
+            <a href="{% url 'register' %}" class="btn btn-register">Become a Donor</a>
+        </div>
+        {% else %}
+        <div>
+            <p style="color: #28a745; font-size: 1.5rem; margin-bottom: 1rem;">Welcome back, {{ user.username }}!</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-login">Go to Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <h3>🔍 Find Donors</h3>
+            <p>Search for blood donors by blood group and location</p>
+        </div>
+        <div class="feature-card">
+            <h3>🩸 Request Blood</h3>
+            <p>Send blood requests to nearby available donors</p>
+        </div>
+        <div class="feature-card">
+            <h3>📍 Location Based</h3>
+            <p>Find donors within 1km radius of your location</p>
+        </div>
+        <div class="feature-card">
+            <h3>🔔 Notifications</h3>
+            <p>Get instant alerts for blood requests</p>
+        </div>
+    </div>
+</body>
+</html>

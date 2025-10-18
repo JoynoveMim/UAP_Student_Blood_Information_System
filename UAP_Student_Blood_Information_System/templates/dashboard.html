@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="welcome-card" style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+    <h2>Welcome, {{ user.username }}! 🩸</h2>
+    {% if profile and profile.blood_group %}
+    <p>You are registered as a <strong>{{ profile.blood_group }}</strong> blood donor. Thank you for being part of our life-saving community!</p>
+    <div style="margin-top: 1rem; padding: 1rem; background: #d4edda; border-radius: 8px;">
+        <strong>🩸 Ready to save lives!</strong> You appear in donor searches when available.
+    </div>
+    {% else %}
+    <p>You are part of our life-saving community. Complete your profile to become a donor!</p>
+    <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px;">
+        <strong>📝 Profile Incomplete:</strong> Please complete your donor information.
+    </div>
+    {% endif %}
+</div>
+
+<div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="action-card" style="background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+        <h3>👤 My Profile</h3>
+        <p>View and update your donor information</p>
+        <a href="{% url 'profile' %}" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 1rem;">View Profile</a>
+    </div>
+    <div class="action-card" style="background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+        <h3>🔍 Find Donors</h3>
+        <p>Search for blood donors by type and location</p>
+        <a href="{% url 'donor_list' %}" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 1rem;">Search Donors</a>
+    </div>
+    <div class="action-card" style="background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+        <h3>🩸 Request Blood</h3>
+        <p>Send blood request to nearby donors</p>
+        <a href="{% url 'request_blood' %}" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 1rem;">Make Request</a>
+    </div>
+    <div class="action-card" style="background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+        <h3>⚡ Quick Search</h3>
+        <p>Common blood groups:</p>
+        <div style="margin-top: 0.5rem;">
+            <a href="{% url 'donor_list' %}?blood_group=O+" style="display: inline-block; background: #dc3545; color: white; padding: 5px 10px; margin: 2px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">O+</a>
+            <a href="{% url 'donor_list' %}?blood_group=A+" style="display: inline-block; background: #dc3545; color: white; padding: 5px 10px; margin: 2px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">A+</a>
+            <a href="{% url 'donor_list' %}?blood_group=B+" style="display: inline-block; background: #dc3545; color: white; padding: 5px 10px; margin: 2px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">B+</a>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications Section -->
+<div class="notifications-preview" style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="color: #dc3545;">
+            🔔 Recent Notifications
+            {% if unread_count > 0 %}
+            <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.25rem 0.5rem; font-size: 0.8rem; margin-left: 0.5rem;">
+                {{ unread_count }}
+            </span>
+            {% endif %}
+        </h3>
+        <a href="{% url 'notifications' %}" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block;">View All</a>
+    </div>
+
+    {% if recent_notifications %}
+        {% for notification in recent_notifications %}
+        <div style="padding: 1rem; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 0.5rem; {% if not notification.is_read %}background: #f0f8ff; border-left: 4px solid #007bff;{% endif %}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <strong>{{ notification.title }}</strong>
+                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">
+                        {{ notification.message|truncatewords:15 }}
+                    </p>
+                </div>
+                <span style="color: #999; font-size: 0.8rem; white-space: nowrap;">
+                    {{ notification.created_at|timesince }} ago
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: #666; text-align: center; padding: 1rem;">
+            No notifications yet. Notifications will appear here for blood requests and updates.
+        </p>
+    {% endif %}
+</div>
+
+{% if user_requests %}
+<div class="recent-requests" style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-top: 2rem;">
+    <h3 style="color: #dc3545; margin-bottom: 1rem;">📋 Your Recent Blood Requests</h3>
+    {% for request in user_requests %}
+    <div style="padding: 1rem; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="background: #dc3545; color: white; padding: 0.25rem 0.5rem; border-radius: 10px; font-weight: bold;">
+                {{ request.blood_group }}
+            </span>
+            <span style="font-size: 0.9rem; color: #666;">
+                {{ request.created_at|date:"M d" }}
+            </span>
+            <span style="padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.8rem; 
+                {% if request.status == 'pending' %}background: #fff3cd; color: #856404; 
+                {% elif request.status == 'accepted' %}background: #d1ecf1; color: #0c5460; 
+                {% elif request.status == 'completed' %}background: #d4edda; color: #155724; 
+                {% else %}background: #f8d7da; color: #721c24;{% endif %}">
+                {{ request.get_status_display }}
+            </span>
+        </div>
+        <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">
+            {{ request.hospital_name }} • {{ request.units_required }} unit{{ request.units_required|pluralize }}
+        </p>
+    </div>
+    {% endfor %}
+    <a href="{% url 'request_history' %}" class="btn" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 1rem;">View All Requests</a>
+</div>
+{% endif %}
+
+{% if pending_requests %}
+<div class="pending-requests" style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-top: 2rem;">
+    <h3 style="color: #28a745; margin-bottom: 1rem;">🆘 Help Needed - Blood Requests</h3>
+    <p style="color: #666; margin-bottom: 1rem;">These patients need your blood type ({{ profile.blood_group }}):</p>
+    
+    {% for request in pending_requests %}
+    <div style="padding: 1rem; border: 1px solid #e9ecef; border-radius: 8px; margin-bottom: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="background: #dc3545; color: white; padding: 0.25rem 0.5rem; border-radius: 10px; font-weight: bold;">
+                {{ request.blood_group }}
+            </span>
+            <span style="padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.8rem;
+                {% if request.urgency == 'normal' %}background: #d4edda; color: #155724;
+                {% elif request.urgency == 'urgent' %}background: #fff3cd; color: #856404;
+                {% else %}background: #f8d7da; color: #721c24;{% endif %}">
+                {{ request.get_urgency_display }}
+            </span>
+        </div>
+        <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">
+            {{ request.hospital_name }}<br>
+            Needed by: {{ request.needed_by|date:"M d, H:i" }}
+        </p>
+        <a href="{% url 'accept_request' request.id %}" class="btn" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 0.5rem;">I Can Help</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

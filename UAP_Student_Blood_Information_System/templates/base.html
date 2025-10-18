@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAP Blood Information System</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .navbar { background: #dc3545; color: white; padding: 1rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .alert { padding: 1rem; margin: 1rem 0; border-radius: 5px; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🩸 UAP Blood Bank</h1>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'profile' %}">My Profile</a>
+                <a href="{% url 'donor_list' %}">Find Donors</a>
+                <a href="{% url 'request_blood' %}">Request Blood</a>
+                <a href="{% url 'request_history' %}">My Requests</a>
+                <a href="{% url 'notifications' %}">
+                    🔔 Notifications
+                    {% if unread_count > 0 %}
+                    <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+                        {{ unread_count }}
+                    </span>
+                    {% endif %}
+                </a>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+    </div>
+
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+       
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
+
+

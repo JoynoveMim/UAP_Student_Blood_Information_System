@@ -92,11 +92,16 @@ def request_blood(request):
             blood_request = form.save(commit=False)
             blood_request.requester = request.user
             blood_request.save()
+            
+            # ✅ ADD NOTIFICATION: Send to matching donors
+            from .utils import send_blood_request_notifications
+            send_blood_request_notifications(blood_request)
+            
             messages.success(request, 'Blood request submitted successfully!')
             return redirect('request_history')
     else:
         form = BloodRequestForm()
-    
+
     unread_count = get_unread_notification_count(request.user)
     return render(request, 'request_blood.html', {
         'form': form,
@@ -110,35 +115,29 @@ def request_blood(request):
 
 
 #register
+# In bloodbank/views.py - UPDATE register FUNCTION:
+
 def register(request):
     """User registration view"""
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-
+            
             # Geocode address and save coordinates
             profile = UserProfile.objects.get(user=user)
-            if form.cleaned_data.get('location_pin'):
-                lat, lng = form.cleaned_data['location_pin'].split(',')
-                profile.latitude = lat
-                profile.longitude = lng
-            else:
-                # Fallback to address geocoding
-                lat, lng = geocode_address(profile.address)
-                profile.latitude = lat
-                profile.longitude = lng
-            
+            lat, lng = geocode_address(profile.address)
+            profile.latitude = lat
+            profile.longitude = lng
             profile.save()
-            login(request, user)
-            return redirect('dashboard')
-
+            
             login(request, user)
             messages.success(request, 'Registration successful!')
             return redirect('dashboard')
     else:
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})
+
 
 
 
@@ -197,7 +196,7 @@ def profile(request):
 
 
 
-# Add this function to calculate unread notifications
+#function to calculate unread notifications
 def get_unread_notification_count(user):
     return Notification.objects.filter(user=user, is_read=False).count()
 
@@ -229,10 +228,37 @@ def get_unread_notification_count(user):
         'unread_count': unread_count,
     })
 
-# Similarly update all other views that use templates with notifications
+
+
+
+@login_required
+# In bloodbank/views.py - UPDATE edit_profile FUNCTION:
+
 @login_required
 def edit_profile(request):
-    # ... existing code ...
+    try:
+        profile_obj = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile_obj = UserProfile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, instance=profile_obj)
+        if form.is_valid():
+            old_address = profile_obj.address
+            profile = form.save()
+            
+            # ✅ UPDATE GEOLOCATION if address changed
+            if old_address != profile.address:
+                lat, lng = geocode_address(profile.address)
+                profile.latitude = lat
+                profile.longitude = lng
+                profile.save()
+            
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')
+    else:
+        form = ProfileEditForm(instance=profile_obj)
+
     unread_count = get_unread_notification_count(request.user)
     return render(request, 'edit_profile.html', {
         'form': form,
@@ -240,7 +266,7 @@ def edit_profile(request):
         'user': request.user,
         'unread_count': unread_count,
     })
-
+    
 
 
 
@@ -261,6 +287,9 @@ def notifications(request):
     })
 
 
+
+
+
 @login_required
 def notification_count(request):
     """API endpoint to get unread notification count (for AJAX updates)"""
@@ -272,15 +301,28 @@ def notification_count(request):
 
 
 
+
+@login_required
 def toggle_availability(request):
     """Toggle donor availability"""
     if request.method == 'POST':
         profile = UserProfile.objects.get(user=request.user)
+        old_availability = profile.is_available
         profile.is_available = not profile.is_available
         profile.save()
+        
+        # ✅ ADD NOTIFICATION: If becoming available, notify matching requests
+        if not old_availability and profile.is_available:
+            from .utils import send_donor_available_notifications
+            send_donor_available_notifications(profile)
+        
         messages.success(request, f'Availability set to {profile.is_available}')
-    return redirect('profile')
+        return redirect('profile')
 
+
+
+
+@login_required
 def accept_request(request, request_id):
     """Accept a blood request"""
     blood_request = get_object_or_404(BloodRequest, id=request_id)
@@ -289,12 +331,20 @@ def accept_request(request, request_id):
         blood_request.accepted_at = timezone.now()
         blood_request.status = 'accepted'
         blood_request.save()
+        
+        # ✅ ADD NOTIFICATION: Notify requester
+        from .utils import send_request_accepted_notification
         send_request_accepted_notification(blood_request)
+        
         messages.success(request, 'Request accepted successfully!')
     else:
         messages.error(request, 'You cannot accept your own request!')
     return redirect('dashboard')
 
+
+
+
+@login_required
 def mark_notification_read(request, notification_id):
     """Mark notification as read"""
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':

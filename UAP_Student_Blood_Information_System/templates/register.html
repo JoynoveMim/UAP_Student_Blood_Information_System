@@ -98,6 +98,66 @@
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
+        /* Footer Styling */
+.footer {
+    background: #dc3545;
+    color: white;
+    padding: 1rem 0;
+    position: fixed; /* Keep it at the bottom */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+    z-index: 10;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.footer p {
+    margin: 0.5rem 0;
+}
+
+.footer p:last-child {
+    font-size: 0.85rem;
+    color: #ddd;
+}
+
+/* Media query for mobile responsiveness */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-links {
+        margin-top: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -212,5 +272,11 @@
             <a href="{% url 'home' %}">← Back to Home</a>
         </div>
     </div>
+<div class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 UAP Blood Bank. All rights reserved. </p>
+
+        </div>
+</div>
 </body>
 </html>

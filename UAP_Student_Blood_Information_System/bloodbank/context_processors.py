@@ -1,4 +1,4 @@
-from .models import Notification
+from UAP_Student_Blood_Information_System.bloodbank.models import Notification
 
 def notification_count(request):
     if request.user.is_authenticated:

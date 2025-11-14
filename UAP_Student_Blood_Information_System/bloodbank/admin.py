@@ -1,5 +1,3 @@
-# In bloodbank/admin.py - ADD THIS CODE:
-
 from django.contrib import admin
 from .models import UserProfile, BloodRequest, Notification
 

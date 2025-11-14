@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
 class BloodbankConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'bloodbank'
+    name = 'UAP_Student_Blood_Information_System.bloodbank'  # Full path to the app

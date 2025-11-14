@@ -97,3 +97,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # Fixed typo
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'  # Redirect to home after logout
 LOGIN_URL = '/login/'
+
+# settings.py
+
+# Media files settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

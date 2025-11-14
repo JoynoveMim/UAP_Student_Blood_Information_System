@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile, BloodRequest
 from datetime import datetime
 
+
 # Import BLOOD_GROUPS from models
 from .models import BLOOD_GROUPS
 

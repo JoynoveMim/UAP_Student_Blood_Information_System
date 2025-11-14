@@ -136,6 +136,7 @@ class UserProfile(models.Model):
     blood_group = models.CharField(max_length=5, choices=BLOOD_GROUPS)
     phone = models.CharField(max_length=15)
     address = models.TextField()
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     is_donor = models.BooleanField(default=True)
     last_donation_date = models.DateField(null=True, blank=True)

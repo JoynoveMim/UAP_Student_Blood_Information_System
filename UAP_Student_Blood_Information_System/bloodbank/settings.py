@@ -103,3 +103,12 @@ LOGIN_URL = '/login/'
 # Media files settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Login/logout URLs
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'  # Redirect to home after logout
+LOGIN_URL = '/login/'
+
+# Session settings (add these if missing)
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+SESSION_SAVE_EVERY_REQUEST = True

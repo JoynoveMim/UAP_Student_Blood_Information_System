@@ -93,7 +93,7 @@
                     </span>
                     {% endif %}
                 </a>
-                <a href="{% url 'logout' %}">Logout</a>
+                <a href="{% url 'logout' %}">🚪 Logout</a>
             {% else %}
                 <a href="{% url 'login' %}">Login</a>
                 <a href="{% url 'register' %}">Register</a>
@@ -121,3 +121,33 @@
 </html>
 
 
+// Add to your base.html or create a separate JS file
+function confirmLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        // Create a form and submit it
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '{% url "logout" %}';
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        form.appendChild(csrfToken);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+    return false;
+}
+
+// Update logout links to use this function
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutLinks = document.querySelectorAll('a[href*="logout"]');
+    logoutLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            confirmLogout();
+        });
+    });
+});

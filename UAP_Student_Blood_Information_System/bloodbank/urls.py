@@ -4,12 +4,16 @@ from django.conf.urls.static import static
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from UAP_Student_Blood_Information_System.bloodbank import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),  # 
+    
+
+    path('logout/', views.custom_logout, name='logout'),
+
     path('register/', views.register, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profile/', views.profile, name='profile'),
@@ -23,5 +27,7 @@ urlpatterns = [
     path('notifications/count/', views.notification_count, name='notification_count'),
     path('notifications/<int:notification_id>/read/', views.mark_notification_read, name='mark_notification_read'),
 ]
+    
+    
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

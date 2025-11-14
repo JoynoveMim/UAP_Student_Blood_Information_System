@@ -3,19 +3,20 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
-from django.http import JsonResponse
 
+from django.http import JsonResponse
 from .forms import CustomUserCreationForm, BloodRequestForm, ProfileEditForm
 from .models import UserProfile, BloodRequest, Notification
 from .utils import send_blood_request_notifications, send_request_accepted_notification, send_donor_available_notifications
 from django.shortcuts import render
 
 from .geolocation import geocode_address, get_nearby_donors
-from .models import BLOOD_GROUPS  # Add this import at the top
+from .models import BLOOD_GROUPS
 
-# Add this import at the top with other imports
 from .models import UserProfile, BloodRequest, Notification, BLOOD_GROUPS
 
+from django.contrib.auth import logout
+from django.contrib import messages
 
 
 def home(request):
@@ -353,3 +354,18 @@ def mark_notification_read(request, notification_id):
         notification.save()
         return JsonResponse({'success': True})
     return JsonResponse({'error': 'Invalid request'})
+
+
+
+def custom_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, 'You have been successfully logged out.')
+        return redirect('home')
+    
+    # If GET request, show confirmation page
+    unread_count = get_unread_notification_count(request.user)
+    return render(request, 'logout.html', {
+        'user': request.user,
+        'unread_count': unread_count,
+    })

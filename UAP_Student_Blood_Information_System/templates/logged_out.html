@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged Out - UAP Blood System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .logout-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #28a745;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-login {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-home {
+            background: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-container">
+        <div class="logout-icon">✅</div>
+        <h2 style="color: #28a745;">Successfully Logged Out</h2>
+        <p style="color: #666; margin-bottom: 2rem; line-height: 1.6;">
+            You have been successfully logged out of the UAP Blood Information System.<br>
+            Thank you for using our service!
+        </p>
+        
+        <div class="logout-actions">
+            <a href="{% url 'login' %}" class="btn btn-login">Login Again</a>
+            <a href="{% url 'home' %}" class="btn btn-home">Back to Home</a>
+        </div>
+        
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e9ecef;">
+            <p style="color: #999; font-size: 0.9rem;">
+                UAP Blood Information System<br>
+                Connecting donors and recipients since 2024
+            </p>
+        </div>
+    </div>
+</body>
+</html>

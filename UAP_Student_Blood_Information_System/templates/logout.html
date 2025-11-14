@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - UAP Blood System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .logout-header {
+            margin-bottom: 2rem;
+        }
+        .logout-header h2 {
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        .logout-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #dc3545;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            min-width: 150px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-logout {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-logout:hover {
+            background: #c82333;
+        }
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-cancel:hover {
+            background: #545b62;
+        }
+        .logout-message {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .logout-form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-container">
+        <div class="logout-header">
+            <div class="logout-icon">🚪</div>
+            <h2>Confirm Logout</h2>
+            <div class="logout-message">
+                <p>Are you sure you want to logout from the UAP Blood Information System?</p>
+                <p>You'll need to log in again to access your account features.</p>
+            </div>
+        </div>
+        
+        <div class="logout-actions">
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-logout">Yes, Logout</button>
+            </form>
+            <a href="{% url 'dashboard' %}" class="btn btn-cancel">Cancel</a>
+        </div>
+        
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e9ecef;">
+            <p style="color: #999; font-size: 0.9rem;">
+                UAP Blood Information System<br>
+                <small>Connecting donors and recipients</small>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

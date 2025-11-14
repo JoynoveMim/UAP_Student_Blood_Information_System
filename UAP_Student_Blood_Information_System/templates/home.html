@@ -18,7 +18,14 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .btn-login { background: #dc3545; color: white; }
         .btn-register { background: #28a745; color: white; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; padding: 2rem; max-width: 1000px; margin: 0 auto; }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Creates two columns */
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
         .feature-card { background: white; padding: 2rem; border-radius: 10px; text-align: center; box-shadow: 0 3px 15px rgba(0,0,0,0.1); }
         .feature-card h3 { color: #dc3545; margin-bottom: 1rem; }
     </style>

@@ -6,229 +6,239 @@
     <title>Find Donors - UAP Blood System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f8f9fa; }
-        .navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
-        .navbar h1 { display: inline-block; margin-right: 2rem; }
-        .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
-        .navbar a:hover { background: rgba(255,255,255,0.2); }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+body { font-family: Arial, sans-serif; background: #f8f9fa; }
+.navbar { background: #dc3545; color: white; padding: 1rem 2rem; }
+.navbar h1 { display: inline-block; margin-right: 2rem; }
+.navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
+.navbar a:hover { background: rgba(255,255,255,0.2); }
+.container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; display: flex; flex-direction: column; align-items: center; }
 
-        .search-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .search-card h2 { color: #dc3545; margin-bottom: 1rem; }
-        .search-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 1rem;
-            align-items: end;
-        }
+.search-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.search-card h2 { color: #dc3545; margin-bottom: 1rem; }
+.search-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    width: 100%;
+    max-width: 900px;
+    align-items: end;
+}
 
-        .form-group { margin-bottom: 0; }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #333;
-        }
+.form-group { margin-bottom: 0; width: 100%; }
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+}
 
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+}
 
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #dc3545;
-        }
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #dc3545;
+}
 
-        .btn {
-            background: #dc3545;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            height: fit-content;
-        }
+.btn {
+    background: #dc3545;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    height: fit-content;
+    margin-top: 1rem;
+}
+.btn:hover { background: #c82333; }
 
-        .btn:hover { background: #c82333; }
+.btn-clear {
+    background: #6c757d;
+    margin-left: 0.5rem;
+}
+.btn-clear:hover { background: #545b62; }
 
-        .btn-clear {
-            background: #6c757d;
-            margin-left: 0.5rem;
-        }
+.radius-toggle {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #e7f3ff;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+    width: 100%;
+}
 
-        .btn-clear:hover {
-            background: #545b62;
-        }
+.radius-toggle input[type="checkbox"] {
+    width: auto;
+    transform: scale(1.2);
+}
 
-        .radius-toggle {
-            grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: #e7f3ff;
-            border-radius: 8px;
-            border-left: 4px solid #007bff;
-        }
+.radius-toggle label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
 
-        .radius-toggle input[type="checkbox"] {
-            width: auto;
-            transform: scale(1.2);
-        }
+.help-text {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
 
-        .radius-toggle label {
-            margin-bottom: 0;
-            font-weight: normal;
-        }
+.donors-list {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 900px;
+}
 
-        .help-text {
-            color: #666;
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-        }
+.donors-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
 
-        .donors-list {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
+.donors-count {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
 
-        .donors-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
+.donor-card {
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    position: relative;
+}
 
-        .donors-count {
-            color: #dc3545;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
+.donor-card:hover {
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    border-color: #dc3545;
+}
 
-        .donor-card {
-            padding: 1.5rem;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 1.5rem;
-            align-items: center;
-            position: relative;
-        }
+.blood-group {
+    background: #dc3545;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+    min-width: 80px;
+}
 
-        .donor-card:hover {
-            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-            border-color: #dc3545;
-        }
+.distance-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #28a745;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
 
-        .blood-group {
-            background: #dc3545;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            text-align: center;
-            min-width: 80px;
-        }
+.donor-info h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+.donor-info p {
+    color: #666;
+    margin-bottom: 0.25rem;
+}
 
-        .distance-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: #28a745;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
+.donor-contact {
+    text-align: right;
+}
+.contact-btn {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+.contact-btn:hover { background: #218838; }
 
-        .donor-info h3 {
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        .donor-info p {
-            color: #666;
-            margin-bottom: 0.25rem;
-        }
+.no-donors {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+.no-donors h3 {
+    margin-bottom: 1rem;
+    color: #dc3545;
+}
 
-        .donor-contact {
-            text-align: right;
-        }
-        .contact-btn {
-            background: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .contact-btn:hover {
-            background: #218838;
-        }
+.search-results-info {
+    background: #e7f3ff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #007bff;
+}
 
-        .no-donors {
-            text-align: center;
-            padding: 3rem;
-            color: #666;
-        }
-        .no-donors h3 {
-            margin-bottom: 1rem;
-            color: #dc3545;
-        }
+.search-type-badge {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 1rem;
+}
 
-        .search-results-info {
-            background: #e7f3ff;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #007bff;
-        }
+@media (max-width: 768px) {
+    .search-form {
+        grid-template-columns: 1fr;
+    }
 
-        .search-type-badge {
-            display: inline-block;
-            background: #28a745;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: 1rem;
-        }
+    .donor-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1rem;
+    }
 
-        @media (max-width: 768px) {
-            .search-form {
-                grid-template-columns: 1fr;
-            }
-            
-            .donor-card {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 1rem;
-            }
-            
-            .donor-contact {
-                text-align: center;
-            }
-        }
+    .donor-contact {
+        text-align: center;
+    }
+
+    .donor-card .blood-group {
+        margin: 0 auto;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -257,7 +267,7 @@
 
 <div class="container">
     <div class="search-card">
-        <h2>🔍 Search Donors</h2>
+        <h2>🔍 Donors</h2>
         <form method="get" class="search-form">
             <div class="form-group">
                 <label for="blood_group">Blood Group:</label>

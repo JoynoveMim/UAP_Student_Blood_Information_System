@@ -14,8 +14,6 @@ def create_notification(user, notification_type, title, message, blood_request=N
     )
     return notification
 
-# In bloodbank/utils.py - FIX THESE FUNCTIONS:
-
 def send_blood_request_notifications(blood_request):
     """
     Send notifications to potential donors when a new blood request is created

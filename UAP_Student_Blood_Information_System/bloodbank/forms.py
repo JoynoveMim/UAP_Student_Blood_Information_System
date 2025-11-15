@@ -38,7 +38,6 @@ class ProfileEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Set initial values for User model fields
         if self.instance and self.instance.user:
             self.fields['first_name'].initial = self.instance.user.first_name
             self.fields['last_name'].initial = self.instance.user.last_name
@@ -72,7 +71,7 @@ class ProfileEditForm(forms.ModelForm):
 
             # Handle profile picture
             if 'profile_picture' in self.changed_data:
-                profile.save()  # This will trigger the resize method
+                profile.save() 
 
             profile.save()
 
@@ -158,14 +157,14 @@ class BloodRequestForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Set initial values for new fields
+        # initial values for new fields
         self.fields['hospital_name'].initial = 'UAP Medical Center'
         self.fields['hospital_address'].initial = 'UAP Campus, Kuratoli, Dhaka'
         self.fields['contact_person'].initial = 'Medical Staff'
         self.fields['contact_phone'].initial = '0123456789'
     
     def save(self, commit=True):
-        # Combine date and time into needed_by field
+        # date and time into needed_by field
         instance = super().save(commit=False)
         needed_by_date = self.cleaned_data['needed_by_date']
         needed_by_time = self.cleaned_data['needed_by_time']
@@ -200,7 +199,7 @@ class ProfileEditForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Set initial values for User model fields
+        # initial values for User model fields
         if self.instance and self.instance.user:
             self.fields['first_name'].initial = self.instance.user.first_name
             self.fields['last_name'].initial = self.instance.user.last_name

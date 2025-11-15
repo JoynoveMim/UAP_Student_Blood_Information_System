@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-
-# Define blood groups at the module level to avoid circular imports
 from django.core.files.storage import default_storage
 import os
 from PIL import Image
@@ -10,8 +8,6 @@ from django.core.validators import FileExtensionValidator
 
 
 class UserProfile(models.Model):
-    # ... your existing fields ...
-
     profile_picture = models.ImageField(
         upload_to='profile_pics/',
         null=True,
@@ -19,8 +15,6 @@ class UserProfile(models.Model):
         help_text='Upload your profile picture (JPG, PNG, JPEG)',
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
     )
-
-    # ... rest of your model code ...
 
     def save(self, *args, **kwargs):
         # Delete old profile picture when new one is uploaded
@@ -80,11 +74,11 @@ class UserProfile(models.Model):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
-    # Define string representation for the model
+    # string representation for the model
     def __str__(self):
         return f"{self.user.username} - {self.blood_group}"
 
-    # Define an explicit app_label in case it is necessary
+    # app_label in case it is necessary
     class Meta:
         app_label = 'bloodbank'  # Explicitly set the app_label for this model
 

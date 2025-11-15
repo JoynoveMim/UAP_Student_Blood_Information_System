@@ -1,4 +1,3 @@
-# blood_system/settings.py
 import os
 from pathlib import Path
 
@@ -17,7 +16,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'UAP_Student_Blood_Information_System.bloodbank.apps.BloodbankConfig',
-    # 'UAP_Student_Blood_Information_System.bloodbank',
 ]
 
 MIDDLEWARE = [
@@ -84,23 +82,20 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
-USE_I18N = True  # Fixed typo
+USE_I18N = True 
 USE_TZ = True
 
-STATIC_URL = '/static/'  # Fixed
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # Fixed typo
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Login/Logout URLs
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'  # Redirect to home after logout
 LOGIN_URL = '/login/'
-
-# settings.py
-
 
 # Login/logout URLs
 LOGIN_REDIRECT_URL = '/dashboard/'

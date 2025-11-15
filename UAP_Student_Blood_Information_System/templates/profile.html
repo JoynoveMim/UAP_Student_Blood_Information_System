@@ -213,7 +213,6 @@
         <a href="{% url 'donor_list' %}">Find Donors</a>
         <a href="{% url 'request_blood' %}">Request Blood</a>
         <a href="{% url 'request_history' %}">My Requests</a>
-        <!-- FIXED NOTIFICATIONS LINK -->
         <a href="{% url 'notifications' %}">
             🔔 Notifications
             {% if unread_count > 0 %}
@@ -236,25 +235,25 @@
         </div>
 
         <div style="display: flex; gap: 2rem; margin-bottom: 2rem; align-items: flex-start;">
-            <!-- Profile Picture -->
-            <div style="text-align: center;">
-                {% if profile.profile_picture %}
-                    <img src="{{ profile.profile_picture.url }}"
-                         alt="Profile Picture"
-                         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #dc3545;">
-                {% else %}
-                    <div style="width: 150px; height: 150px; border-radius: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd;">
-                        <span style="color: #666; font-size: 3rem;">👤</span>
-                    </div>
-                {% endif %}
-                <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
-                    {% if profile.profile_picture %}
-                        Profile Picture
-                    {% else %}
-                        No photo uploaded
-                    {% endif %}
-                </p>
-            </div>
+    <!-- Profile Picture -->
+    <div style="text-align: center;">
+        {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" 
+             alt="Profile Picture" 
+             style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #dc3545;">
+        {% else %}
+        <div style="width: 150px; height: 150px; border-radius: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd;">
+            <span style="color: #666; font-size: 3rem;">👤</span>
+        </div>
+        {% endif %}
+        <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+            {% if profile.profile_picture %}
+            Profile Picture
+            {% else %}
+            No photo uploaded
+            {% endif %}
+        </p>
+    </div>
 
             <!-- Basic Info -->
             <div style="flex: 1;">
@@ -294,9 +293,7 @@
             </div>
         </div>
 
-        <!-- Rest of your existing profile info items -->
         <div class="profile-info">
-            <!-- Keep all your existing info items here -->
             <div class="info-item">
                 <span class="info-label">Address:</span>
                 <span class="info-value">
@@ -307,8 +304,6 @@
                     {% endif %}
                 </span>
             </div>
-
-            <!-- ... rest of your existing info items ... -->
         </div>
     </div>
 </div>

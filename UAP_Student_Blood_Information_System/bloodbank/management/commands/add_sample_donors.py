@@ -19,7 +19,6 @@ class Command(BaseCommand):
         ]
 
         for donor_data in sample_donors:
-            # Create user if not exists
             user, created = User.objects.get_or_create(
                 username=donor_data['username'],
                 defaults={'email': f"{donor_data['username']}@uap.edu.bd"}

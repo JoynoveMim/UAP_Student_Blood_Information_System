@@ -12,7 +12,7 @@
         .navbar a { color: white; text-decoration: none; margin: 0 1rem; padding: 0.5rem 1rem; border-radius: 5px; }
         .navbar a:hover { background: rgba(255,255,255,0.2); }
         .container { max-width: 800px; margin: 2rem auto; padding: 0 2rem; }
-        
+
         .edit-header {
             display: flex;
             justify-content: space-between;
@@ -20,83 +20,100 @@
             margin-bottom: 2rem;
         }
         .edit-header h2 { color: #dc3545; }
-        
-        .btn { 
-            background: #007bff; 
-            color: white; 
-            padding: 10px 20px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
+
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
             text-decoration: none;
             display: inline-block;
             margin-right: 0.5rem;
         }
+
         .btn:hover { background: #0056b3; }
         .btn-success { background: #28a745; }
         .btn-success:hover { background: #218838; }
         .btn-danger { background: #6c757d; }
         .btn-danger:hover { background: #545b62; }
-        
-        .edit-card { 
-            background: white; 
-            padding: 2rem; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1); 
+
+        .edit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
-        
-        .form-group { 
-            margin-bottom: 1.5rem; 
+
+        .form-group {
+            margin-bottom: 1.5rem;
         }
-        .form-group label { 
-            display: block; 
-            margin-bottom: 0.5rem; 
-            font-weight: bold; 
-            color: #333; 
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
         }
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid #e9ecef; 
-            border-radius: 8px; 
-            font-size: 1rem; 
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
         }
-        .form-group input:focus, 
-        .form-group select:focus, 
-        .form-group textarea:focus { 
-            outline: none; 
-            border-color: #dc3545; 
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #dc3545;
         }
-        
+
+        /* Specific styling for file input */
+        .form-group input[type="file"] {
+            padding: 8px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+        }
+
+        .form-group input[type="file"]:focus {
+            border-color: #dc3545;
+            background: #fff;
+        }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
-        
+
         .checkbox-group {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
+
         .checkbox-group input {
             width: auto;
         }
-        
+
         .help-text {
             color: #666;
             font-size: 0.8rem;
             margin-top: 0.25rem;
         }
-        
+
         .error-message {
             color: #dc3545;
             font-size: 0.8rem;
             margin-top: 0.25rem;
         }
-        
+
         .action-buttons {
             display: flex;
             gap: 1rem;
@@ -104,245 +121,320 @@
             padding-top: 2rem;
             border-top: 2px solid #f8f9fa;
         }
-        
+
         .required::after {
             content: " *";
             color: #dc3545;
         }
-        
+
         .messages {
             margin-bottom: 2rem;
         }
-        
+
         .alert {
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
         }
-        
+
         .alert-success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .alert-error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
+        .profile-picture-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .current-picture {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .file-upload-label:hover {
+            background: #0056b3;
+        }
+
+        .file-input {
+            position: absolute;
+            left: -9999px;
+        }
     </style>
 </head>
 <body>
     <div class="navbar">
-    <h1>🩸 UAP Blood Bank</h1>
-        <!-- Profile Picture Section -->
-<h3 style="color: #dc3545; margin: 2rem 0 1rem 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
-    📷 Profile Picture
-</h3>
-
-<div class="form-row">
-    <div class="form-group">
-        <label for="id_profile_picture">Current Profile Picture:</label>
-        <div style="margin-top: 1rem;">
-            {% if profile.profile_picture %}
-                <img src="{{ profile.profile_picture.url }}"
-                     alt="Profile Picture"
-                     style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #dc3545;">
-                <div class="help-text" style="margin-top: 0.5rem;">
-                    <a href="#" onclick="document.getElementById('remove_picture').value='true'; return false;"
-                       style="color: #dc3545; text-decoration: none;">
-                        ❌ Remove current picture
-                    </a>
-                </div>
-            {% else %}
-                <div style="width: 150px; height: 150px; border-radius: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px dashed #ddd;">
-                    <span style="color: #666; text-align: center;">No Photo</span>
-                </div>
-            {% endif %}
-        </div>
+        <h1>🩸 UAP Blood Bank</h1>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'profile' %}">My Profile</a>
+            <a href="{% url 'donor_list' %}">Find Donors</a>
+            <a href="{% url 'request_blood' %}">Request Blood</a>
+            <a href="{% url 'request_history' %}">My Requests</a>
+            <a href="{% url 'notifications' %}">
+                🔔 Notifications
+                {% if unread_count > 0 %}
+                <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
+                    {{ unread_count }}
+                </span>
+                {% endif %}
+            </a>
+            <a href="{% url 'logout' %}">🚪 Logout</a>
+        </nav>
     </div>
-    <form method="post">
-<form method="post" enctype="multipart/form-data">
 
-
-    <div class="form-group">
-        <label for="id_profile_picture">Upload New Picture:</label>
-        {{ form.profile_picture }}
-        {% if form.profile_picture.errors %}
-            <div class="error-message">{{ form.profile_picture.errors }}</div>
-        {% endif %}
-        <div class="help-text">
-            {{ form.profile_picture.help_text }}<br>
-            Recommended: Square image, max 2MB
-        </div>
-    </div>
-</div>
-
-<!-- Hidden field for removing picture -->
-<input type="hidden" name="remove_picture" id="remove_picture" value="false">
-    <nav>
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'profile' %}">My Profile</a>
-        <a href="{% url 'donor_list' %}">Find Donors</a>
-        <a href="{% url 'request_blood' %}">Request Blood</a>
-        <a href="{% url 'request_history' %}">My Requests</a>
-        <!-- ADD NOTIFICATIONS LINK HERE -->
-         <a href="{% url 'notifications' %}">
-    🔔 Notifications
-    {% if unread_count > 0 %}
-    <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
-        {{ unread_count }}
-    </span>
-    {% endif %}
-</a>
-
-        <a href="{% url 'logout' %}">🚪 Logout</a>
-    </nav>
-</div>
-    
-
-
-
-    
     <div class="container">
         <div class="edit-header">
             <h2>✏️ Edit Profile</h2>
             <a href="{% url 'profile' %}" class="btn btn-danger">← Back to Profile</a>
         </div>
-        
+
         <!-- Messages -->
         {% if messages %}
         <div class="messages">
             {% for message in messages %}
-                <div class="alert alert-{% if message.tags == 'success' %}success{% else %}error{% endif %}">
-                    {{ message }}
-                </div>
+            <div class="alert alert-{% if message.tags == 'success' %}success{% else %}error{% endif %}">
+                {{ message }}
+            </div>
             {% endfor %}
         </div>
         {% endif %}
-        
+
         <div class="edit-card">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                
+
+                <!-- Profile Picture Section -->
+                <div class="profile-picture-section">
+                    <h3 style="color: #dc3545; margin-bottom: 1rem;">🖼️ Profile Picture</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Current Profile Picture:</label>
+                            <div class="current-picture">
+                                {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" 
+                                     alt="Profile Picture" 
+                                     style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #dc3545;">
+                                <div class="help-text" style="margin-top: 0.5rem;"> 
+                                    <a href="#" 
+                                       onclick="document.getElementById('remove_picture').value='true'; this.closest('form').submit(); return false;" 
+                                       style="color: #dc3545; text-decoration: none;">
+                                        🗑️ Remove current picture
+                                    </a>
+                                </div>
+                                {% else %}
+                                <div style="width: 150px; height: 150px; border-radius: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px dashed #ddd; margin: 0 auto;">
+                                    <span style="color: #666; text-align: center;">📷 No Photo</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_profile_picture">Upload New Picture:</label>
+                            
+                            <!-- Manual file input with better styling -->
+                            <div class="file-upload-wrapper">
+                                <label for="id_profile_picture" class="file-upload-label">
+                                    📁 Choose Profile Picture
+                                </label>
+                                <input type="file" name="profile_picture" 
+                                       id="id_profile_picture" 
+                                       class="file-input"
+                                       accept="image/jpeg,image/jpg,image/png"
+                                       onchange="updateFileName(this)">
+                                <div id="file-name" class="help-text" style="margin-top: 0.5rem;">
+                                    No file chosen
+                                </div>
+                            </div>
+                            
+                            {% if form.profile_picture.errors %}
+                            <div class="error-message">
+                                {% for error in form.profile_picture.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            
+                            <div class="help-text">
+                                📝 Upload a JPG, JPEG, or PNG image (max 2MB)<br>
+                                ✅ Recommended: Square image for best results
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden field for removing picture -->
+                <input type="hidden" name="remove_picture" id="remove_picture" value="false">
+
                 <!-- Personal Information -->
                 <h3 style="color: #dc3545; margin-bottom: 1rem; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
                     👤 Personal Information
                 </h3>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="id_first_name" class="required">First Name:</label>
-                        {{ form.first_name }}
+                        <input type="text" name="first_name" id="id_first_name" 
+                               value="{{ form.first_name.value|default:user.first_name }}" 
+                               class="form-control" 
+                               placeholder="Enter your first name">
                         {% if form.first_name.errors %}
                         <div class="error-message">{{ form.first_name.errors }}</div>
                         {% endif %}
-                        <div class="help-text">{{ form.first_name.help_text }}</div>
+                        <div class="help-text">Your first name</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="id_last_name" class="required">Last Name:</label>
-                        {{ form.last_name }}
+                        <input type="text" name="last_name" id="id_last_name" 
+                               value="{{ form.last_name.value|default:user.last_name }}" 
+                               class="form-control" 
+                               placeholder="Enter your last name">
                         {% if form.last_name.errors %}
                         <div class="error-message">{{ form.last_name.errors }}</div>
                         {% endif %}
-                        <div class="help-text">{{ form.last_name.help_text }}</div>
+                        <div class="help-text">Your last name</div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="id_email" class="required">Email:</label>
-                    {{ form.email }}
+                    <input type="email" name="email" id="id_email" 
+                           value="{{ form.email.value|default:user.email }}" 
+                           class="form-control" 
+                           placeholder="Enter your email address">
                     {% if form.email.errors %}
                     <div class="error-message">{{ form.email.errors }}</div>
                     {% endif %}
-                    <div class="help-text">{{ form.email.help_text }}</div>
+                    <div class="help-text">Your email address</div>
                 </div>
-                
+
                 <!-- Donor Information -->
-                <h3 style="color: #dc3545; margin: 2rem 0 1rem 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
-                    🩸 Donor Information
+                <h3 style="color: #dc3545; margin: 2rem 0 1rem 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">  
+                    🩸 Donor Information  
                 </h3>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="id_blood_group" class="required">Blood Group:</label>
-                        {{ form.blood_group }}
+                        <select name="blood_group" id="id_blood_group" class="form-control">
+                            <option value="">Select Blood Group</option>
+                            {% for value, label in form.blood_group.field.choices %}
+                                <option value="{{ value }}" {% if form.blood_group.value == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
                         {% if form.blood_group.errors %}
                         <div class="error-message">{{ form.blood_group.errors }}</div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="id_phone" class="required">Phone Number:</label>
-                        {{ form.phone }}
+                        <input type="text" name="phone" id="id_phone" 
+                               value="{{ form.phone.value|default:profile.phone }}" 
+                               class="form-control" 
+                               placeholder="Enter your phone number">
                         {% if form.phone.errors %}
                         <div class="error-message">{{ form.phone.errors }}</div>
                         {% endif %}
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="id_address" class="required">Address:</label>
-                    {{ form.address }}
+                    <textarea name="address" id="id_address" class="form-control" 
+                              rows="3" placeholder="Enter your current address...">{{ form.address.value|default:profile.address }}</textarea>
                     {% if form.address.errors %}
                     <div class="error-message">{{ form.address.errors }}</div>
                     {% endif %}
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="id_date_of_birth" class="required">Date of Birth:</label>
-                        {{ form.date_of_birth }}
+                        <input type="date" name="date_of_birth" id="id_date_of_birth" 
+                               value="{{ form.date_of_birth.value|default:profile.date_of_birth|date:'Y-m-d' }}" 
+                               class="form-control">
                         {% if form.date_of_birth.errors %}
                         <div class="error-message">{{ form.date_of_birth.errors }}</div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="id_last_donation_date">Last Donation Date:</label>
-                        {{ form.last_donation_date }}
+                        <input type="date" name="last_donation_date" id="id_last_donation_date" 
+                               value="{{ form.last_donation_date.value|default:profile.last_donation_date|date:'Y-m-d' }}" 
+                               class="form-control">
                         {% if form.last_donation_date.errors %}
                         <div class="error-message">{{ form.last_donation_date.errors }}</div>
                         {% endif %}
-                        <div class="help-text">{{ form.last_donation_date.help_text }}</div>
+                        <div class="help-text">When did you last donate blood? (Important for eligibility)</div>
                     </div>
                 </div>
-                
+
                 <!-- Donor Status -->
                 <h3 style="color: #dc3545; margin: 2rem 0 1rem 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
                     ⚙️ Donor Settings
                 </h3>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <div class="checkbox-group">
-                            {{ form.is_donor }}
+                            <input type="checkbox" name="is_donor" id="id_is_donor" 
+                                   {% if form.is_donor.value|default:profile.is_donor %}checked{% endif %}>
                             <label for="id_is_donor" style="font-weight: normal;">
-                                I am registered as a blood donor
+                                ✅ I am registered as a blood donor
                             </label>
                         </div>
                         {% if form.is_donor.errors %}
                         <div class="error-message">{{ form.is_donor.errors }}</div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="form-group">
                         <div class="checkbox-group">
-                            {{ form.is_available }}
+                            <input type="checkbox" name="is_available" id="id_is_available" 
+                                   {% if form.is_available.value|default:profile.is_available %}checked{% endif %}>
                             <label for="id_is_available" style="font-weight: normal;">
-                                I am currently available to donate
+                                🟢 I am currently available to donate
                             </label>
                         </div>
                         {% if form.is_available.errors %}
                         <div class="error-message">{{ form.is_available.errors }}</div>
                         {% endif %}
-                        <div class="help-text">{{ form.is_available.help_text }}</div>
+                        <div class="help-text">Toggle this if you are currently available to donate blood</div>
                     </div>
                 </div>
-                
+
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-success">💾 Save Changes</button>
                     <a href="{% url 'profile' %}" class="btn btn-danger">❌ Cancel</a>
@@ -350,5 +442,26 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function updateFileName(input) {
+            const fileNameDisplay = document.getElementById('file-name');
+            if (input.files.length > 0) {
+                fileNameDisplay.textContent = 'Selected file: ' + input.files[0].name;
+                fileNameDisplay.style.color = '#28a745';
+                fileNameDisplay.style.fontWeight = 'bold';
+            } else {
+                fileNameDisplay.textContent = 'No file chosen';
+                fileNameDisplay.style.color = '#666';
+                fileNameDisplay.style.fontWeight = 'normal';
+            }
+        }
+
+        // Initialize file name display on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('id_profile_picture');
+            updateFileName(fileInput);
+        });
+    </script>
 </body>
 </html>

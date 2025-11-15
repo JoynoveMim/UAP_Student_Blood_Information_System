@@ -38,14 +38,12 @@ def edit_profile(request):
         if form.is_valid():
             old_address = profile_obj.address
 
-            # Handle profile picture removal
             remove_picture = request.POST.get('remove_picture') == 'true'
             if remove_picture and profile_obj.profile_picture:
                 profile_obj.profile_picture.delete(save=False)
 
             profile = form.save(commit=False)
 
-            # Update geolocation if address changed
             if old_address != profile.address:
                 lat, lng = geocode_address(profile.address)
                 profile.latitude = lat
@@ -69,7 +67,7 @@ def edit_profile(request):
 
 @login_required
 def donor_list(request):
-    # Get search parameters from GET request
+    # search parameters from GET request
     blood_group = request.GET.get('blood_group', '')
     location = request.GET.get('location', '')
     use_radius = request.GET.get('use_radius', False)
@@ -88,11 +86,11 @@ def donor_list(request):
     if location:
         donors = donors.filter(address__icontains=location)
 
-    # FIX: Use BLOOD_GROUPS from models instead of UserProfile.BLOOD_GROUPS
+    # Use BLOOD_GROUPS from models instead of UserProfile.BLOOD_GROUPS
     from .models import BLOOD_GROUPS  # Add this import
     blood_groups = BLOOD_GROUPS
 
-    # For radius search demonstration (mock data)
+    # For radius search demonstration 
     search_type = 'radius' if use_radius else 'text'
     if use_radius:
         for donor in donors:
@@ -102,7 +100,7 @@ def donor_list(request):
 
     return render(request, 'donor_list.html', {
         'donors': donors,
-        'blood_groups': blood_groups,  # Use the imported BLOOD_GROUPS
+        'blood_groups': blood_groups, 
         'selected_blood_group': blood_group,
         'selected_location': location,
         'search_type': search_type,
@@ -118,7 +116,7 @@ def request_history(request):
     unread_count = get_unread_notification_count(request.user)
     
     return render(request, 'request_history.html', {
-        'user_requests': user_requests,  # This was missing!
+        'user_requests': user_requests,
         'user': request.user,
         'unread_count': unread_count,
     })
@@ -134,8 +132,7 @@ def request_blood(request):
             blood_request = form.save(commit=False)
             blood_request.requester = request.user
             blood_request.save()
-            
-            # ✅ ADD NOTIFICATION: Send to matching donors
+           
             from .utils import send_blood_request_notifications
             send_blood_request_notifications(blood_request)
             
@@ -157,7 +154,6 @@ def request_blood(request):
 
 
 #register
-# In bloodbank/views.py - UPDATE register FUNCTION:
 
 def register(request):
     """User registration view"""
@@ -215,7 +211,7 @@ def dashboard(request):
         'user_requests': user_requests,
         'pending_requests': pending_requests,
         'recent_notifications': recent_notifications,
-        'unread_count': unread_count,  # Add this to context
+        'unread_count': unread_count,
     })
 
 

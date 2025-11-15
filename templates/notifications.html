@@ -155,7 +155,6 @@
         <a href="{% url 'donor_list' %}">Find Donors</a>
         <a href="{% url 'request_blood' %}">Request Blood</a>
         <a href="{% url 'request_history' %}">My Requests</a>
-        <!-- ADD NOTIFICATIONS LINK HERE -->
         <a href="{% url 'notifications' %}">
     🔔 Notifications
     {% if unread_count > 0 %}
@@ -247,7 +246,6 @@
                     const notificationElement = document.getElementById(`notification-${notificationId}`);
                     notificationElement.classList.remove('unread');
                     
-                    // Remove the mark read button
                     const actionsDiv = notificationElement.querySelector('.notification-actions');
                     if (actionsDiv) {
                         actionsDiv.remove();
@@ -268,7 +266,7 @@
                         if (badge) {
                             badge.textContent = data.count;
                         } else {
-                            // Create badge if it doesn't exist
+
                             const navLink = document.querySelector('a[href*="notifications"]');
                             const newBadge = document.createElement('span');
                             newBadge.className = 'notification-badge';

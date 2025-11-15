@@ -3,6 +3,58 @@ from django.db import models
 from django.utils import timezone
 
 # Define blood groups at the module level to avoid circular imports
+from django.core.files.storage import default_storage
+import os
+from PIL import Image
+from django.core.validators import FileExtensionValidator
+
+
+class UserProfile(models.Model):
+    # ... your existing fields ...
+
+    profile_picture = models.ImageField(
+        upload_to='profile_pics/',
+        null=True,
+        blank=True,
+        help_text='Upload your profile picture (JPG, PNG, JPEG)',
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
+    )
+
+    # ... rest of your model code ...
+
+    def save(self, *args, **kwargs):
+        # Delete old profile picture when new one is uploaded
+        try:
+            old = UserProfile.objects.get(pk=self.pk)
+            if old.profile_picture and old.profile_picture != self.profile_picture:
+                if default_storage.exists(old.profile_picture.name):
+                    default_storage.delete(old.profile_picture.name)
+        except UserProfile.DoesNotExist:
+            pass
+
+        super().save(*args, **kwargs)
+
+        # Resize image if it exists
+        if self.profile_picture:
+            self.resize_image()
+
+    def resize_image(self, size=(200, 200)):
+        """Resize profile picture to save storage"""
+        if self.profile_picture:
+            try:
+                img_path = self.profile_picture.path
+                with Image.open(img_path) as img:
+                    # Convert to RGB if necessary
+                    if img.mode in ('RGBA', 'P'):
+                        img = img.convert('RGB')
+
+                    # Resize image
+                    img.thumbnail(size, Image.Resampling.LANCZOS)
+                    img.save(img_path, 'JPEG', quality=85)
+            except Exception as e:
+                # If there's an error, just keep the original
+                print(f"Error resizing image: {e}")
+
 BLOOD_GROUPS = [
     ('A+', 'A+'), ('A-', 'A-'),
     ('B+', 'B+'), ('B-', 'B-'),

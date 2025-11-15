@@ -3,7 +3,80 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile, BloodRequest
 from datetime import datetime
+from django.core.validators import FileExtensionValidator
 
+
+class ProfileEditForm(forms.ModelForm):
+    # User model fields
+    first_name = forms.CharField(max_length=30, required=False, help_text="Your first name")
+    last_name = forms.CharField(max_length=30, required=False, help_text="Your last name")
+    email = forms.EmailField(help_text="Your email address")
+
+    # Profile picture field
+    profile_picture = forms.ImageField(
+        required=False,
+        help_text='Upload a JPG, JPEG, or PNG image (max 2MB)',
+        widget=forms.FileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png'})
+    )
+
+    class Meta:
+        model = UserProfile
+        fields = [
+            'first_name', 'last_name', 'email', 'profile_picture',
+            'blood_group', 'phone', 'address', 'date_of_birth',
+            'is_donor', 'is_available', 'last_donation_date'
+        ]
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Enter your current address...'}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'last_donation_date': forms.DateInput(attrs={'type': 'date'})
+        }
+        help_texts = {
+            'is_available': 'Toggle this if you are currently available to donate blood',
+            'last_donation_date': 'When did you last donate blood? (Important for eligibility)',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set initial values for User model fields
+        if self.instance and self.instance.user:
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['email'].initial = self.instance.user.email
+
+    def clean_profile_picture(self):
+        picture = self.cleaned_data.get('profile_picture')
+        if picture:
+            # Check file size (2MB limit)
+            if picture.size > 2 * 1024 * 1024:
+                raise forms.ValidationError('Profile picture must be less than 2MB')
+
+            # Check file extension
+            ext = os.path.splitext(picture.name)[1].lower()
+            if ext not in ['.jpg', '.jpeg', '.png']:
+                raise forms.ValidationError('Only JPG, JPEG, and PNG files are allowed')
+
+        return picture
+
+    def save(self, commit=True):
+        # Save UserProfile first
+        profile = super().save(commit=False)
+
+        # Update User model fields
+        if commit:
+            user = profile.user
+            user.first_name = self.cleaned_data['first_name']
+            user.last_name = self.cleaned_data['last_name']
+            user.email = self.cleaned_data['email']
+            user.save()
+
+            # Handle profile picture
+            if 'profile_picture' in self.changed_data:
+                profile.save()  # This will trigger the resize method
+
+            profile.save()
+
+        return profile
 
 # Import BLOOD_GROUPS from models
 from .models import BLOOD_GROUPS

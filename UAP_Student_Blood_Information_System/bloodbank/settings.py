@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+from django.conf import settings as dj_settings
 
 SECRET_KEY = 'your-secret-key-here'
 DEBUG = True
@@ -100,9 +101,6 @@ LOGIN_URL = '/login/'
 
 # settings.py
 
-# Media files settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Login/logout URLs
 LOGIN_REDIRECT_URL = '/dashboard/'
@@ -112,3 +110,8 @@ LOGIN_URL = '/login/'
 # Session settings (add these if missing)
 SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
 SESSION_SAVE_EVERY_REQUEST = True
+
+# Media files settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+

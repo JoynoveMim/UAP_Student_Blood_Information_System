@@ -136,6 +136,51 @@
 <body>
     <div class="navbar">
     <h1>🩸 UAP Blood Bank</h1>
+        <!-- Profile Picture Section -->
+<h3 style="color: #dc3545; margin: 2rem 0 1rem 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 0.5rem;">
+    📷 Profile Picture
+</h3>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="id_profile_picture">Current Profile Picture:</label>
+        <div style="margin-top: 1rem;">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}"
+                     alt="Profile Picture"
+                     style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #dc3545;">
+                <div class="help-text" style="margin-top: 0.5rem;">
+                    <a href="#" onclick="document.getElementById('remove_picture').value='true'; return false;"
+                       style="color: #dc3545; text-decoration: none;">
+                        ❌ Remove current picture
+                    </a>
+                </div>
+            {% else %}
+                <div style="width: 150px; height: 150px; border-radius: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px dashed #ddd;">
+                    <span style="color: #666; text-align: center;">No Photo</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <form method="post">
+<form method="post" enctype="multipart/form-data">
+
+
+    <div class="form-group">
+        <label for="id_profile_picture">Upload New Picture:</label>
+        {{ form.profile_picture }}
+        {% if form.profile_picture.errors %}
+            <div class="error-message">{{ form.profile_picture.errors }}</div>
+        {% endif %}
+        <div class="help-text">
+            {{ form.profile_picture.help_text }}<br>
+            Recommended: Square image, max 2MB
+        </div>
+    </div>
+</div>
+
+<!-- Hidden field for removing picture -->
+<input type="hidden" name="remove_picture" id="remove_picture" value="false">
     <nav>
         <a href="{% url 'home' %}">Home</a>
         <a href="{% url 'dashboard' %}">Dashboard</a>
@@ -152,18 +197,7 @@
     </span>
     {% endif %}
 </a>
-        <a href="{% url 'notifications' %}">
-            🔔 Notifications
-            {% if user.is_authenticated %}
-                {% with unread_count=user.notifications.filter.is_read=False.count %}
-                    {% if unread_count > 0 %}
-                        <span style="background: #dc3545; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.7rem; margin-left: 0.25rem;">
-                            {{ unread_count }}
-                        </span>
-                    {% endif %}
-                {% endwith %}
-            {% endif %}
-        </a>
+
         <a href="{% url 'logout' %}">🚪 Logout</a>
     </nav>
 </div>

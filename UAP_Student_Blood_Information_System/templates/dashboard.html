@@ -16,6 +16,40 @@
     {% endif %}
 </div>
 
+<!-- Replace the welcome-card div with this: -->
+<div class="welcome-card">
+    <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem;">
+        {% if profile and profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}"
+                 alt="Profile Picture"
+                 style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #dc3545;">
+        {% else %}
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd;">
+                <span style="color: #666; font-size: 2rem;">👤</span>
+            </div>
+        {% endif %}
+        <div>
+            <h2>Welcome, {{ user.username }}! 👋</h2>
+            {% if profile and profile.blood_group %}
+                <p>You are registered as a <strong>{{ profile.blood_group }}</strong> blood donor. Thank you for being part of our life-saving community!</p>
+            {% else %}
+                <p>You are part of our life-saving community. Complete your profile to become a donor!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if profile and profile.blood_group %}
+        <div style="margin-top: 1rem; padding: 1rem; background: #d4edda; border-radius: 8px;">
+            <strong>✅ Ready to save lives!</strong> You appear in donor searches when available.
+        </div>
+    {% else %}
+        <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px;">
+            <strong>⚠️ Profile Incomplete:</strong> Please complete your donor information.
+        </div>
+    {% endif %}
+</div>
+
+
 <div class="quick-actions" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
     <div class="action-card" style="background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
         <h3>👤 My Profile</h3>

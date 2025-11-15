@@ -25,6 +25,47 @@ def home(request):
 
 
 
+@login_required
+def edit_profile(request):
+    try:
+        profile_obj = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile_obj = UserProfile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, request.FILES, instance=profile_obj)
+
+        if form.is_valid():
+            old_address = profile_obj.address
+
+            # Handle profile picture removal
+            remove_picture = request.POST.get('remove_picture') == 'true'
+            if remove_picture and profile_obj.profile_picture:
+                profile_obj.profile_picture.delete(save=False)
+
+            profile = form.save(commit=False)
+
+            # Update geolocation if address changed
+            if old_address != profile.address:
+                lat, lng = geocode_address(profile.address)
+                profile.latitude = lat
+                profile.longitude = lng
+
+            profile.save()
+
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')
+    else:
+        form = ProfileEditForm(instance=profile_obj)
+
+    unread_count = get_unread_notification_count(request.user)
+    return render(request, 'edit_profile.html', {
+        'form': form,
+        'profile': profile_obj,
+        'user': request.user,
+        'unread_count': unread_count,
+    })
+
 
 @login_required
 def donor_list(request):

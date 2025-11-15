@@ -227,6 +227,93 @@
 </div>
 
 <div class="container">
+    <div class="profile-card">
+        <div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 2rem;">
+            <div>
+                <h2>👤 My Profile</h2>
+            </div>
+            <a href="{% url 'edit_profile' %}" class="edit-btn">✏️ Edit Profile</a>
+        </div>
+
+        <div style="display: flex; gap: 2rem; margin-bottom: 2rem; align-items: flex-start;">
+            <!-- Profile Picture -->
+            <div style="text-align: center;">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}"
+                         alt="Profile Picture"
+                         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #dc3545;">
+                {% else %}
+                    <div style="width: 150px; height: 150px; border-radius: 50%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd;">
+                        <span style="color: #666; font-size: 3rem;">👤</span>
+                    </div>
+                {% endif %}
+                <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+                    {% if profile.profile_picture %}
+                        Profile Picture
+                    {% else %}
+                        No photo uploaded
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Basic Info -->
+            <div style="flex: 1;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="info-item">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value">{{ user.username }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">{{ user.email|default:"Not set" }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">Blood Group:</span>
+                        <span class="info-value">
+                            {% if profile and profile.blood_group %}
+                                <span class="blood-group">{{ profile.blood_group }}</span>
+                            {% else %}
+                                Not set
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">
+                            {% if profile and profile.phone %}
+                                {{ profile.phone }}
+                            {% else %}
+                                Not set
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rest of your existing profile info items -->
+        <div class="profile-info">
+            <!-- Keep all your existing info items here -->
+            <div class="info-item">
+                <span class="info-label">Address:</span>
+                <span class="info-value">
+                    {% if profile and profile.address %}
+                        {{ profile.address|linebreaks }}
+                    {% else %}
+                        Not set
+                    {% endif %}
+                </span>
+            </div>
+
+            <!-- ... rest of your existing info items ... -->
+        </div>
+    </div>
+</div>
+
+<div class="container">
     <div class="profile-header">
         <h2>👤 My Profile</h2>
         <div>
